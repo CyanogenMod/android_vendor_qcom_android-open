@@ -1,5 +1,8 @@
 LOCAL_PATH := $(call my-dir)
 
+PRODUCT_COPY_FILES += \
+        $(LOCAL_PATH)/proprietary/01_qcomm_omx.cfg:system/etc/01_qcomm_omx.cfg
+
 include $(CLEAR_VARS)
 LOCAL_MODULE := libqcomm_omx.so
 LOCAL_MODULE_CLASS := SHARED_LIBRARIES
