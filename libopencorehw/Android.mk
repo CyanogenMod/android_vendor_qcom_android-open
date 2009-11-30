@@ -1,9 +1,30 @@
 LOCAL_PATH := $(call my-dir)
-
 include $(CLEAR_VARS)
-LOCAL_MODULE := libopencorehw.so
-LOCAL_MODULE_CLASS := SHARED_LIBRARIES
-LOCAL_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)
-LOCAL_SRC_FILES := proprietary/$(LOCAL_MODULE)
-OVERRIDE_BUILT_MODULE_PATH := $(TARGET_OUT_INTERMEDIATE_LIBRARIES)
-include $(BUILD_PREBUILT)
+
+# Set up the OpenCore variables.
+include external/opencore/Config.mk
+LOCAL_C_INCLUDES := $(PV_INCLUDES)
+
+LOCAL_SRC_FILES := \
+    android_surface_output_msm72xx.cpp
+
+LOCAL_CFLAGS := $(PV_CFLAGS_MINUS_VISIBILITY)
+
+LOCAL_SHARED_LIBRARIES := \
+    libutils \
+    libbinder \
+    libcutils \
+    libui \
+    libhardware\
+    libandroid_runtime \
+    libmedia \
+    libskia \
+    libopencore_common \
+    libicuuc \
+    libopencore_player
+
+LOCAL_MODULE := libopencorehw
+
+LOCAL_LDLIBS += 
+
+include $(BUILD_SHARED_LIBRARY)

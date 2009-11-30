@@ -15,4 +15,8 @@
 #
 ifeq ($(TARGET_BOARD_PLATFORM),msm7k)
   include $(all-subdir-makefiles)
+else
+  ifeq ($(TARGET_BOARD_PLATFORM),qsd8k)
+    include $(all-subdir-makefiles)
+  endif
 endif
