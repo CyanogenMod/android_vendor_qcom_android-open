@@ -2339,6 +2339,7 @@ QualcommCameraHardware::AshmemPool::AshmemPool(int buffer_size, int num_buffers,
 
 static bool register_buf(int camfd,
                          int size,
+                         int frame_size,
                          int pmempreviewfd,
                          uint32_t offset,
                          uint8_t *buf,
@@ -2409,6 +2410,7 @@ QualcommCameraHardware::PmemPool::PmemPool(const char *pmem_pool,
         for (int cnt = 0; cnt < num_buffers; ++cnt) {
             register_buf(mCameraControlFd,
                          mBufferSize,
+                         mFrameSize,
                          mHeap->getHeapID(),
                          mAlignedBufferSize * cnt,
                          (uint8_t *)mHeap->base() + mAlignedBufferSize * cnt,
@@ -2430,6 +2432,7 @@ QualcommCameraHardware::PmemPool::~PmemPool()
         for (int cnt = 0; cnt < mNumBuffers; ++cnt) {
             register_buf(mCameraControlFd,
                          mBufferSize,
+                         mFrameSize,
                          mHeap->getHeapID(),
                          mAlignedBufferSize * cnt,
                          (uint8_t *)mHeap->base() + mAlignedBufferSize * cnt,
@@ -2456,6 +2459,7 @@ QualcommCameraHardware::MemPool::~MemPool()
 
 static bool register_buf(int camfd,
                          int size,
+                         int frame_size,
                          int pmempreviewfd,
                          uint32_t offset,
                          uint8_t *buf,
@@ -2471,7 +2475,7 @@ static bool register_buf(int camfd,
     pmemBuf.len      = size;
     pmemBuf.vaddr    = buf;
     pmemBuf.y_off    = 0;
-    pmemBuf.cbcr_off = size * 2 / 3; //PAD_TO_WORD(size * 2 / 3);
+    pmemBuf.cbcr_off = frame_size * 2 / 3; //PAD_TO_WORD(size * 2 / 3);
     pmemBuf.active   = vfe_can_write;
 
     LOGV("register_buf: camfd = %d, reg = %d buffer = %p",
