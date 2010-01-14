@@ -72,6 +72,16 @@ private:
     // hardware frame buffer support
     bool                        mHardwareCodec;
     uint32                      mOffset;
+
+    //Average FPS profiling
+    virtual void AverageFPSProfiling();
+    virtual void AverageFPSPrint();
+    bool                        mStatistics;
+    int                         mLastFrame;
+    float                       mFpsSum;
+    unsigned long               iFrameNumber;
+    unsigned long               mNumFpsSamples;
+    nsecs_t                     mLastFpsTime;
 };
 
 #endif // ANDROID_SURFACE_OUTPUT_MSM72XX_H_INCLUDED

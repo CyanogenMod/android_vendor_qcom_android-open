@@ -81,6 +81,15 @@ private:
     sp<Overlay>                 mOverlay;
     uint32                      mFd;
 
+        //Average FPS profiling
+    virtual void AverageFPSProfiling();
+    virtual void AverageFPSPrint();
+    bool                        mStatistics;
+    int                         mLastFrame;
+    float                       mFpsSum;
+    unsigned long               iFrameNumber;
+    unsigned long               mNumFpsSamples;
+    nsecs_t                     mLastFpsTime;
 };
 
 #endif // ANDROID_SURFACE_OUTPUT_MSM7X30_H_INCLUDED
