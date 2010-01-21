@@ -23,6 +23,8 @@
 #include "android_surface_output_msm72xx.h"
 #include <media/PVPlayer.h>
 
+#include <cutils/properties.h>
+
 #define PLATFORM_PRIVATE_PMEM 1
 
 #if HAVE_ANDROID_OS
@@ -38,10 +40,22 @@ OSCL_EXPORT_REF AndroidSurfaceOutputMsm72xx::AndroidSurfaceOutputMsm72xx() :
     AndroidSurfaceOutput()
 {
     mHardwareCodec = false;
+
+    //Statistics profiling
+    char value[PROPERTY_VALUE_MAX];
+    mStatistics = false;
+    mLastFrame = 0;
+    mLastFpsTime = 0;
+    mFpsSum = 0;
+    iFrameNumber = 0;
+    mNumFpsSamples = 0;
+    property_get("persist.debug.pv.statistics", value, "0");
+    if(atoi(value)) mStatistics = true;
 }
 
 OSCL_EXPORT_REF AndroidSurfaceOutputMsm72xx::~AndroidSurfaceOutputMsm72xx()
 {
+    if(mStatistics) AverageFPSPrint();
 }
 
 // create a frame buffer for software codecs
@@ -160,6 +174,9 @@ PVMFStatus AndroidSurfaceOutputMsm72xx::writeFrameBuf(uint8* aData, uint32 aData
         mSurface->postBuffer(mFrameBuffers[mFrameBufferIndex]);
     }
 
+    //Average FPS profiling
+    if(mStatistics) AverageFPSProfiling();
+
     return PVMFSuccess;
 }
 
@@ -256,3 +273,25 @@ extern "C" AndroidSurfaceOutputMsm72xx* createVideoMio()
     return new AndroidSurfaceOutputMsm72xx();
 }
 
+void AndroidSurfaceOutputMsm72xx::AverageFPSProfiling()
+{
+    nsecs_t now = systemTime(SYSTEM_TIME_MONOTONIC);
+    nsecs_t diff = now - mLastFpsTime;
+    iFrameNumber++;
+
+    if (diff > ms2ns(250)) {
+        float mFps =  ((iFrameNumber - mLastFrame) * float(s2ns(1))) / diff;
+        LOGE("AndroidSurfaceOutputMsm72xx: Frames Per Second: %.4f", mFps);
+        mFpsSum += mFps;
+        mNumFpsSamples++;
+        mLastFpsTime = now;
+        mLastFrame = iFrameNumber;
+    }
+}
+
+void AndroidSurfaceOutputMsm72xx::AverageFPSPrint()
+{
+    LOGE("==========================================================");
+    LOGE("AndroidSurfaceOutputMsm72xx: Average Frames Per Second: %.4f", mFpsSum / mNumFpsSamples);
+    LOGE("==========================================================");
+}
