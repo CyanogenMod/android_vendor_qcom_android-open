@@ -88,7 +88,7 @@ OSCL_EXPORT_REF bool AndroidSurfaceOutputMsm7x30::initCheck()
         LOGV("using hardware codec");
         mHardwareCodec = true;
         mUseOverlay = true;
-        sp<OverlayRef> ref = mSurface->createOverlay(displayWidth, displayHeight, OVERLAY_FORMAT_YCrCb_420_SP);
+        sp<OverlayRef> ref = mSurface->createOverlay(frameWidth, frameHeight, OVERLAY_FORMAT_YCrCb_420_SP);
         mOverlay = new Overlay(ref);
         if (mOverlay  == 0){
              mUseOverlay = false;
@@ -123,7 +123,7 @@ OSCL_EXPORT_REF bool AndroidSurfaceOutputMsm7x30::initCheck()
             mFrameBuffers[i] = i * frameSize;
         }
         mUseOverlay = true;
-        sp<OverlayRef> ref = mSurface->createOverlay(displayWidth, displayHeight, OVERLAY_FORMAT_YCbCr_420_SP);
+        sp<OverlayRef> ref = mSurface->createOverlay(frameWidth, frameHeight, OVERLAY_FORMAT_YCbCr_420_SP);
         mOverlay = new Overlay(ref);
         if (mOverlay  == 0){
              mUseOverlay = false;
