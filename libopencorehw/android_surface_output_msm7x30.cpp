@@ -97,6 +97,7 @@ OSCL_EXPORT_REF bool AndroidSurfaceOutputMsm7x30::initCheck()
         }else {
              LOGV("Create overlay successful\n");
              mFd = 0;
+             mOverlay->setCrop(0,0,displayWidth,displayHeight);
         }
 
     } else {
@@ -134,6 +135,7 @@ OSCL_EXPORT_REF bool AndroidSurfaceOutputMsm7x30::initCheck()
              mFd = mHeapPmem->heapID();
              LOGV("Calling setFd \n");
              mOverlay->setFd(mFd);
+             mOverlay->setCrop(0,0,displayWidth,displayHeight);
         }
 
         LOGV("video = %d x %d", displayWidth, displayHeight);
