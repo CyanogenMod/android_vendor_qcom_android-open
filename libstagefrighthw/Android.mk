@@ -1,3 +1,5 @@
+ifeq ($(BOARD_USES_QCOM_LIBS),true)
+
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
@@ -22,3 +24,4 @@ LOCAL_PRELINK_MODULE:= false
 
 include $(BUILD_SHARED_LIBRARY)
 
+endif # build_with_qcom_libs
