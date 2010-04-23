@@ -1,4 +1,4 @@
-ifdef ($(BOARD_USES_QCOM_LIBS),true)
+ifeq ($(BOARD_USES_QCOM_LIBS),true)
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
